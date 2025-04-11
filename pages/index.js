@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { Card } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
+import { Textarea } from "../components/ui/textarea";
+import { Label } from "../components/ui/label";
+
 
 const validCodes = [
   "VJ7M0UBHN1", "JW5B4C9PD2", "8RX19R3N4B", "EP50YL4APE", "PH1P7L8XPQ",
