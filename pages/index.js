@@ -8,25 +8,7 @@ import Head from "next/head";
 
 const validCodes = [
   "U94TVBY5OI", "O266MJQZJ3", "3650U2RO16", "X4BKY6ZLUJ", "8Q7RD7VDT6",
-  "OFMLJBMVTG", "1TRC4KE6N4", "W6MSRQ1ZKE", "PLO02GGMS6", "R086Y1ZL2D",
-  "A9D561IF36", "X1FQ9GF7G3", "45K9HPMC9D", "1D6D7WWHZ4", "QRINF7XXLV",
-  "AS4MHHBNZ7", "SH462ZBFTE", "NM1EQI4DAV", "CYN3B7IACZ", "OOZLIHF72F",
-  "83T6NY6TWI", "8AZG7CZDWC", "42DIE79SEO", "SRNQYVEIXE", "PFT0NO7ME0",
-  "Y8ACW38GDA", "PPN37YKDO6", "DV31UMWZNI", "AK6RXFTJRU", "ZA3QEEGXE2",
-  "A5KVE67NU2", "OPTW5HJLCY", "9SG8XHLTXV", "EU0ZS5327H", "0SFA5A6O8N",
-  "SDJCGQW8N5", "COB9YMK5O7", "2Q8VS8L19R", "7Q10XUK21Q", "452YMBN5DJ",
-  "XCPVA1DMFN", "AKTWUTH4FJ", "ADR4AZPU77", "VVTHI2JQOE", "X3256T10FN",
-  "VCN6XGY62U", "CIR3TPV7OI", "RJ74BCVECJ", "PIHZGCU9U4", "O1ETTNZ0GV",
-  "ZSGVLTD7CU", "8EY6UNIKJH", "3JYBSAW83R", "3SGD4MALW4", "ZX4UTR6UUL",
-  "XS3WSKRNQU", "3E1EFIWGXL", "2BAT26S052", "1BGI91FM0F", "UZ2NA6PI37",
-  "D0ROE0P71R", "2S7W47PPC4", "ECZN6KMLE5", "ACE4FE2ZTC", "EQBHXS1AP6",
-  "Z54AN7YLSN", "CKOC3I77AW", "K0GV09PT8Z", "M07D2F8YWF", "TKI6M24ZDA",
-  "XYYMCS48PS", "QW1O9L58IN", "KHBK4W7B1Q", "RN2OEMRF25", "TLQ91VVF92",
-  "T31L6MRYBD", "LIZLMV12HS", "RITWQRZNF9", "FND6AO2RPF", "3D2S0VCLSK",
-  "UDRVS27TH5", "F9Y8CMYLB6", "ABAZDJTLHT", "U0ZY6CZJYW", "E209UO9B8V",
-  "HMTEMUU0QV", "XY09O3ILCQ", "H219KG23I1", "BVRV7KEE7J", "BOGAPJ95MR",
-  "CAEWXFSZ2Y", "LAJN0QD31E", "ZBSU3N5U2F", "ESU8L8V43N", "C4ZL5RFETZ",
-  "Q7NZMV8RTY", "24W14LDZAF", "ZS79ZUQ3EE", "LVO06TLKPX", "B6X8VKNDRV"
+  "ZS79ZUQ3EE", "LVO06TLKPX", "B6X8VKNDRV"
 ];
 
 export default function OrderForm() {
@@ -39,9 +21,11 @@ export default function OrderForm() {
     address: "",
     allergies: "",
     ideas: "",
-    description: "",
+    description: [],
+    customOrder: "",
     code: "",
-    serves: ""
+    serves: "",
+    consent: false
   });
   const [result, setResult] = useState(null);
 
@@ -56,7 +40,25 @@ export default function OrderForm() {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox" && name === "description") {
+      setFormData((prev) => {
+        const isChecked = prev.description.includes(value);
+        return {
+          ...prev,
+          description: isChecked
+            ? prev.description.filter((item) => item !== value)
+            : [...prev.description, value],
+        };
+      });
+    } else if (type === "checkbox") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked ? value || true : false,
+      }));
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -69,23 +71,24 @@ export default function OrderForm() {
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-        <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
       </Head>
-      <div className="min-h-screen flex items-center justify-center bg-[#fdf7ec] p-6 font-['Comic Neue']">
-        <Card className="w-full max-w-3xl shadow-lg bg-white rounded-xl border border-yellow-200">
-          <CardContent className="p-8 space-y-6">
-            <h1 className="text-3xl font-bold text-center text-[#5c3d25]">Order Form 🍯 HoningTaarten</h1>
+      <div className="min-h-screen flex items-center justify-center bg-[#fff8f2] p-6 font-['Pacifico']">
+        <Card className="w-full max-w-3xl shadow-2xl bg-white rounded-3xl border border-[#f1d3a1]">
+          <CardContent className="p-10 space-y-6">
+            <h1 className="text-4xl font-bold text-center text-[#5c3d25]">Order/Замовлення/Bestell 🍯 HoningTaarten by Halyna</h1>
+            <p className="text-center text-[#4b3a2f] italic text-lg">Hier kun je je bestelling plaatsen</p>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label className="text-lg font-semibold text-[#4b3a2f]">Your Full Name</Label>
+                <Label className="text-lg font-semibold text-[#4b3a2f]">Your Name <span className="text-red-500">*</span></Label>
                 <Input name="name" value={formData.name} onChange={handleChange} required />
               </div>
               <div>
                 <Label className="text-lg font-semibold text-[#4b3a2f]">Email Address</Label>
-                <Input name="email" value={formData.email} onChange={handleChange} required />
+                <Input name="email" value={formData.email} onChange={handleChange} />
               </div>
               <div>
-                <Label className="text-lg font-semibold text-[#4b3a2f]">Phone Number (with WhatsApp)</Label>
+                <Label className="text-lg font-semibold text-[#4b3a2f]">Phone Number (with WhatsApp) <span className="text-red-500">*</span></Label>
                 <Input name="phone" value={formData.phone} onChange={handleChange} required />
               </div>
               <div>
@@ -93,8 +96,8 @@ export default function OrderForm() {
                 <Input name="date" type="date" value={formData.date} onChange={handleChange} required />
               </div>
               <div>
-                <Label className="text-lg font-semibold text-[#4b3a2f]">Pick-up or Delivery?</Label>
-                <select name="delivery" value={formData.delivery} onChange={handleChange} className="w-full border rounded p-2">
+                <Label className="text-lg font-semibold text-[#4b3a2f]">Pick-up or Delivery? <span className="text-red-500">*</span></Label>
+                <select name="delivery" value={formData.delivery} onChange={handleChange} required className="w-full border rounded p-2">
                   <option value="">Select</option>
                   <option value="pickup">Pick-up</option>
                   <option value="delivery">Delivery (within 20km of Den Haag)</option>
@@ -102,25 +105,46 @@ export default function OrderForm() {
               </div>
               {formData.delivery === "delivery" && (
                 <div>
-                  <Label className="text-lg font-semibold text-[#4b3a2f]">Delivery address (if applicable)</Label>
-                  <Textarea name="address" value={formData.address} onChange={handleChange} />
+                  <Label className="text-lg font-semibold text-[#4b3a2f]">Delivery address <span className="text-red-500">*</span></Label>
+                  <Textarea name="address" value={formData.address} onChange={handleChange} required />
+                  <p className="text-sm text-[#6c4f36] italic mt-1">The delivery cost is calculated separately based on your distance.</p>
                 </div>
               )}
               <div>
-                <Label className="text-lg font-semibold text-[#4b3a2f]">What would you like to order?</Label>
-                <Textarea name="description" value={formData.description} onChange={handleChange} placeholder="e.g. Honey cake with berries, Meringue roll..." required />
+                <Label className="text-lg font-semibold text-[#4b3a2f]">What would you like to order? <span className="text-red-500">*</span></Label>
+                <div className="space-y-2 mt-2">
+                  {["Honey cake (fillings possible)", "Chockolade honey cake", "Meringue roll with cream-cheese"].map((item) => (
+                    <label key={item} className="flex items-center space-x-2 text-[#4b3a2f]">
+                      <input
+                        type="checkbox"
+                        name="description"
+                        value={item}
+                        checked={formData.description.includes(item)}
+                        onChange={handleChange}
+                      />
+                      <span>{item}</span>
+                    </label>
+                  ))}
+                  <p className="text-sm text-[#4b3a2f] italic">or enter your request:</p>
+                  <Textarea
+                    name="customOrder"
+                    value={formData.customOrder}
+                    onChange={handleChange}
+                    placeholder="Your request…"
+                  />
+                </div>
               </div>
               <div>
                 <Label className="text-lg font-semibold text-[#4b3a2f]">How many people should your order serve?</Label>
-                <Input name="serves" value={formData.serves} onChange={handleChange} required />
+                <Input name="serves" value={formData.serves} onChange={handleChange} />
               </div>
               <div>
                 <Label className="text-lg font-semibold text-[#4b3a2f]">Any other notes, ideas, or special requests?</Label>
-                <Textarea name="ideas" value={formData.ideas} onChange={handleChange} />
+                <Textarea name="ideas" value={formData.ideas} onChange={handleChange} placeholder="Please write here about fillings, preferred delivery time or other wishes." />
               </div>
               <div>
-                <Label className="text-lg font-semibold text-[#4b3a2f]">Do you have any allergy or dietary requests?</Label>
-                <Textarea name="allergies" value={formData.allergies} onChange={handleChange} />
+                <Label className="text-lg font-semibold text-[#4b3a2f]">Do you have any allergy or dietary requests? <span className="text-red-500">*</span></Label>
+                <Textarea name="allergies" value={formData.allergies} onChange={handleChange} required />
               </div>
               <div>
                 <Label className="text-lg font-semibold text-[#4b3a2f]">Promo Code (if you have)</Label>
@@ -132,7 +156,17 @@ export default function OrderForm() {
                   <p className="text-red-600 mt-1 font-medium">❌ Invalid or used code.</p>
                 )}
               </div>
-              <Button type="submit" className="w-full bg-[#d6a65a] hover:bg-[#c08d3e] text-white text-lg py-3 rounded-xl">
+              <div className="flex items-center space-x-2">
+                <input type="checkbox" name="consent" onChange={handleChange} />
+                <label className="text-sm text-[#4b3a2f]">Ik ga akkoord met het verstrekken van mijn gegevens</label>
+              </div>
+              <Button
+                type="submit"
+                disabled={!formData.consent}
+                className={`w-full text-white text-lg py-3 rounded-xl ${
+                  formData.consent ? "bg-[#d6a65a] hover:bg-[#c08d3e]" : "bg-gray-300 cursor-not-allowed"
+                }`}
+              >
                 Place Order
               </Button>
             </form>
