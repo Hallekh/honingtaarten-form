@@ -59,7 +59,7 @@ export default function OrderForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    const response = await fetch("https://script.google.com/macros/s/AKfycbzU5w12MsIJRl8RpsN7d_WOrsSPSjIu15huoAlyKJzFHIx4LCmqCqfwe2cyQaYBXieT/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbwHtF9B6jwqlcaSpfcx0eelPc2WZv8NfA2i3sReuSXEtt-kTQ84yDKhUBwHoXSAaUsg/exec", {
       method: "POST",
       body: JSON.stringify(formData),
       headers: { "Content-Type": "application/json" }
